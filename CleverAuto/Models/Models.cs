@@ -40,6 +40,8 @@
         public int CarId { get; set; }
         public bool ReminderSent { get; set; } = false;
 
+
+
     }
 
 }
