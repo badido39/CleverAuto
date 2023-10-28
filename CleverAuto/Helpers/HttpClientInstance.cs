@@ -8,7 +8,7 @@
         public HttpClientInstance()
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7141/"); // Set the base address here
+            _httpClient.BaseAddress = new Uri("https://cleverauto.sawarii.com/"); // Set the base address here
         }
 
         public HttpClient GetHttpClientInstance()
