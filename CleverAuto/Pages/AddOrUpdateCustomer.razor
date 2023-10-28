@@ -1,0 +1,37 @@
+﻿@page "/addcustomer"
+@using CleverAuto.Models
+
+
+<h3>Add or Update Customer</h3>
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input class="form-control" id="name" @bind="customer.Name" />
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input class="form-control" id="phone" @bind="customer.Phone" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input class="form-control" id="email" @bind="customer.Email" />
+    </div>
+    <!-- Similarly, add input fields for other properties of the Customer model -->
+
+    <button class="btn btn-primary" @onclick="SaveCustomer">Save</button>
+}
+@code {
+    private Customer customer = new Customer();
+
+    private void SaveCustomer()
+    {
+        // Add your logic here to save the customer
+        // For example, you can call a service to handle the saving process
+        // YourService.AddCustomer(customer);
+    }
+}
