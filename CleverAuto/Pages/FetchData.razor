@@ -3,12 +3,22 @@
 @using CleverAuto.Data
 @using CleverAuto.Helpers;
 @using CleverAuto.Models;
+@using CleverAuto.Services;
 @using System.Text.Json;
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Newtonsoft.Json;
-@inject  HttpClientInstance HttpClientInstance  
+@using System.Diagnostics
+@inject  ICustomerServiceRemote CustomerService;
 
 <h1>Clients</h1>
+@if (isLoading)
+{
+    <div class="spinner-border text-center" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
 <div >
     <QuickGrid Class="col-12" Items="@FilteredCustomers" Pagination="@pagination" >
         <PropertyColumn Title="ID"   Property="@(p => p.Id)" Sortable="true" />
@@ -24,15 +34,14 @@
         <PropertyColumn Title="Numero De Serie"   Property="@(p => p.Car.VIN)" Sortable="true" />
         <PropertyColumn Title="Marque"   Property="@(p => p.Car.Model)" Sortable="true" />
         <PropertyColumn Title="Modele"   Property="@(p => p.Car.Make)" Sortable="true" />
-        <PropertyColumn Title="Details"   Property="@(p => p.Car.Services)" Sortable="true" />
+        <PropertyColumn Title="Details"   Property="@(p => p.Car.Services[0].Type)" Sortable="true" />
         
         
 
    
 </QuickGrid>
-</div>
 <Paginator State="@pagination" />
-
+</div>
 <div class="page-buttons">
     Page:
     @if (pagination.TotalItemCount.HasValue)
@@ -49,11 +58,14 @@
         }
     }
 </div>
+}
+
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     private IQueryable<Customer>? Customers;
     string nameFilter;
- 
+    bool isLoading = true;
+
     IQueryable<Customer> FilteredCustomers
     {
         get
@@ -65,23 +77,30 @@
                 result = result.Where(c => c.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
             }
 
-           
+
 
             return result;
         }
     }
     protected override async Task OnInitializedAsync()
     {
-        HttpClient httpClient = HttpClientInstance.GetHttpClientInstance();
-        // Use the httpClient to make requests
-        HttpResponseMessage response = await httpClient.GetAsync("api/Customer/GetAllCustomers");
+        try
+        {
+            var res = await CustomerService.GetAllCustomerAsync();
+            StateHasChanged();
+            Customers = res.AsQueryable(); 
+            Debug.WriteLine(Customers.Count()); 
 
-
-        var result = await response.Content.ReadAsStringAsync();
-       
-        Customers = JsonConvert.DeserializeObject<List<Customer>>(result).AsQueryable();
-
-        pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+            pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            //
+        }
+        finally
+        {
+            isLoading = false;
+        }
 
     }
     private async Task GoToPageAsync(int pageIndex)

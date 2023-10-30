@@ -1,4 +1,6 @@
-﻿using CleverAuto.Data;
+﻿using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using CleverAuto.Helpers;
 using CleverAuto.Services;
 using Microsoft.Extensions.Logging;
@@ -16,15 +18,20 @@ namespace CleverAuto
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
-
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
-
-            builder.Services.AddSingleton<CustomerService>();
+            builder.Services
+     .AddBlazorise(options =>
+     {
+         options.Immediate = true;
+     })
+     .AddBootstrapProviders()
+     .AddFontAwesomeIcons();
+            builder.Services.AddSingleton<ICustomerServiceRemote, CustomerService>();
             builder.Services.AddSingleton<HttpClientInstance>();
 
             return builder.Build();
