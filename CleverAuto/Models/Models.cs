@@ -40,8 +40,13 @@
         public int CarId { get; set; }
         public bool ReminderSent { get; set; } = false;
 
+    }
 
-
+    public class ServiceList
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool Selected { get; set; }
     }
 
 }

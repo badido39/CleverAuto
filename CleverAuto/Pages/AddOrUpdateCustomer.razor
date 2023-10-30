@@ -1,7 +1,8 @@
 ﻿@page "/addcustomer"
 @using CleverAuto.Models
 @using CleverAuto.Services
-@inject ICustomerServiceRemote CustomerService;
+@inject ICustomerService CustomerService;
+@inject NavigationManager NavigationManager
 
 
 <h3>Add or Update Customer</h3>
@@ -23,15 +24,71 @@ else
         <label for="email">Email:</label>
         <input class="form-control" id="email" @bind="customer.Email" />
     </div>
-    <!-- Similarly, add input fields for other properties of the Customer model -->
+    <div class="form-group">
+        <label for="email">Car VIN:</label>
+        <input class="form-control" id="email" @bind="customer.Car.VIN" />
+    </div>
+    <div class="form-group">
+        <label for="email">Car Make:</label>
+        <input class="form-control" id="email" @bind="customer.Car.Make" />
+    </div>
+    <div class="form-group">
+        <label for="email">Car Model:</label>
+        <input class="form-control" id="email" @bind="customer.Car.Model" />
+    </div>
+    <div class="form-group">
+        <label for="email">Car First Year Of Use:</label>
+        <input class="form-control" id="email" @bind="customer.Car.YearOfFirstUse" />
+    </div>
+    <div class="form-group">
+        <label for="email">Car Current Mileage:</label>
+        <input class="form-control" id="email" @bind="customer.Car.CurrentMileage" />
+    </div>
+    <div class="form-group">
+        <label for="email">Car Plate Number #:</label>
+        <input class="form-control" id="email" @bind="customer.Car.PlateNumber" />
+    </div>
 
+  
+    <!-- Similarly, add input fields for other properties of the Customer model -->
+    <div class="form-group">
+        <label for="services">Select Services:</label>
+        @foreach (var service in serviceList)
+        {
+            <div>
+                <input type="checkbox" id="@service.Id" @bind="service.Selected" />
+                <label for="@service.Id">@service.Name</label>
+            </div>
+        }
+    </div>
     <button class="btn btn-primary" @onclick="SaveCustomer">Save</button>
 }
 @code {
     private Customer customer = new Customer();
+    private List<ServiceList> serviceList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //services = await ServiceService.GetServices(); // Replace with your actual method for fetching services
+        serviceList = new List<ServiceList> { 
+            new ServiceList { Id = 1, Name = "Vidange" } ,
+            new ServiceList { Id = 2, Name = "Boite" } ,
+            new ServiceList { Id = 3, Name = "Plaquette De Frein" } ,
+            new ServiceList { Id = 4, Name = "Suspension" } ,
+
+
+        }; // Replace with your actual method for fetching services
+    }
 
     private void SaveCustomer()
     {
+        var ServiceToAdd = serviceList.Where(s => s.Selected).ToList();
+        foreach (var service in ServiceToAdd)
+        {
+            customer.Car.Services.Add(new Service { Type = service.Name, DateOfService = DateTime.Now, ReminderSent = false });
+        }
         CustomerService.AddCustomer(customer);
+        NavigationManager.NavigateTo("/listCustomers");
+
     }
 }

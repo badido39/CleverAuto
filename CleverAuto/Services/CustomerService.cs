@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace CleverAuto.Services
 {
-    public class CustomerService : ICustomerServiceRemote
+    public class CustomerServiceRemote : ICustomerService
     {
         private readonly HttpClientInstance _httpClientInstance;
 
-        public CustomerService(HttpClientInstance httpClientInstance)
+        public CustomerServiceRemote(HttpClientInstance httpClientInstance)
         {
             _httpClientInstance = httpClientInstance;
         }
@@ -42,7 +42,7 @@ namespace CleverAuto.Services
             }
         }
 
-        public async Task<List<Customer>> GetAllCustomerAsync( )
+        public async Task<Customer[]> GetAllCustomerAsync( )
         {
             try
             {
@@ -54,7 +54,7 @@ namespace CleverAuto.Services
                 var result = await response.Content.ReadAsStringAsync();
 
                 List<Customer> Customers = JsonConvert.DeserializeObject<List<Customer>>(result);
-                return Customers;
+                return Customers.ToArray();
             }
             catch (Exception ex)
             {
@@ -64,9 +64,9 @@ namespace CleverAuto.Services
             
         }
     }
-    public interface ICustomerServiceRemote
+    public interface ICustomerService
     {
-        public Task<List<Customer>> GetAllCustomerAsync();
+        public Task<Customer[]> GetAllCustomerAsync();
         public Task AddCustomer(Customer customer);
 
     }
