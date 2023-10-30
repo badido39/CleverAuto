@@ -1,5 +1,7 @@
 ﻿@page "/addcustomer"
 @using CleverAuto.Models
+@using CleverAuto.Services
+@inject ICustomerServiceRemote CustomerService;
 
 
 <h3>Add or Update Customer</h3>
@@ -30,8 +32,6 @@ else
 
     private void SaveCustomer()
     {
-        // Add your logic here to save the customer
-        // For example, you can call a service to handle the saving process
-        // YourService.AddCustomer(customer);
+        CustomerService.AddCustomer(customer);
     }
 }

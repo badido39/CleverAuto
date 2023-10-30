@@ -3,10 +3,12 @@
 @using CleverAuto.Data
 @using CleverAuto.Helpers;
 @using CleverAuto.Models;
+@using CleverAuto.Services;
 @using System.Text.Json;
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Newtonsoft.Json;
-@inject  HttpClientInstance HttpClientInstance  
+@using System.Diagnostics
+@inject  ICustomerServiceRemote CustomerService;
 
 <h1>Clients</h1>
 @if (isLoading)
@@ -84,20 +86,15 @@ else
     {
         try
         {
-            HttpClient httpClient = HttpClientInstance.GetHttpClientInstance();
-            // Use the httpClient to make requests
-            HttpResponseMessage response = await httpClient.GetAsync("api/Customer/GetAllCustomers");
-
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            Customers = JsonConvert.DeserializeObject<List<Customer>>(result).AsQueryable();
+            var res = await CustomerService.GetAllCustomerAsync();
+            StateHasChanged();
+            Customers = res.AsQueryable(); 
+            Debug.WriteLine(Customers.Count()); 
 
             pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
         }
         catch (Exception ex)
         {
-            
             //
         }
         finally

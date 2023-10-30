@@ -31,7 +31,7 @@ namespace CleverAuto
      })
      .AddBootstrapProviders()
      .AddFontAwesomeIcons();
-            builder.Services.AddSingleton<CustomerService>();
+            builder.Services.AddSingleton<ICustomerServiceRemote, CustomerService>();
             builder.Services.AddSingleton<HttpClientInstance>();
 
             return builder.Build();
