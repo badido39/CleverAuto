@@ -1,0 +1,16 @@
+.body {
+    font-family: 'Josefin';
+}
+.cardTitle{
+    color:cadetblue;
+    font-family:Josefin-medium;
+    font-weight:800;
+}
+@font-face {
+    font-family: 'Josefin';
+    src: url('../fonts/JosefinSans-Regular.ttf');
+}
+@font-face {
+    font-family: 'Josefin-medium';
+    src: url('../fonts/JosefinSans-Medium.ttf');
+}

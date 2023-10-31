@@ -1,67 +1,217 @@
 ﻿@page "/addcustomer"
+@using Blazorise
 @using CleverAuto.Models
 @using CleverAuto.Services
+@using System.Collections.ObjectModel;
 @inject ICustomerService CustomerService;
 @inject NavigationManager NavigationManager
 
 
-<h3>Add or Update Customer</h3>
+
 @if (customer == null)
 {
     <p>Loading...</p>
 }
 else
 {
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input class="form-control" id="name" @bind="customer.Name" />
-    </div>
-    <div class="form-group">
-        <label for="phone">Phone:</label>
-        <input class="form-control" id="phone" @bind="customer.Phone" />
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input class="form-control" id="email" @bind="customer.Email" />
-    </div>
-    <div class="form-group">
-        <label for="email">Car VIN:</label>
-        <input class="form-control" id="email" @bind="customer.Car.VIN" />
-    </div>
-    <div class="form-group">
-        <label for="email">Car Make:</label>
-        <input class="form-control" id="email" @bind="customer.Car.Make" />
-    </div>
-    <div class="form-group">
-        <label for="email">Car Model:</label>
-        <input class="form-control" id="email" @bind="customer.Car.Model" />
-    </div>
-    <div class="form-group">
-        <label for="email">Car First Year Of Use:</label>
-        <input class="form-control" id="email" @bind="customer.Car.YearOfFirstUse" />
-    </div>
-    <div class="form-group">
-        <label for="email">Car Current Mileage:</label>
-        <input class="form-control" id="email" @bind="customer.Car.CurrentMileage" />
-    </div>
-    <div class="form-group">
-        <label for="email">Car Plate Number #:</label>
-        <input class="form-control" id="email" @bind="customer.Car.PlateNumber" />
+    <div class="container body w-100 ">
+
+
+
+        <div class="card">
+            <div class="card-header">
+                <div class="p-0 cardTitle">
+
+
+                    <h5> <Icon class="mx-4" Name="IconName.UserTie" IconSize="IconSize.x2" />Information De Client </h5>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">First Name</label>
+                                <input type="text" class="form-control" placeholder="Enter first name">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Last Name</label>
+                                <input type="text" class="form-control" placeholder="Enter last name">
+                            </div>
+                        </div><!-- Col -->
+                    </div><!-- Row -->
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">City</label>
+                                <input type="text" class="form-control" placeholder="Enter city">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">State</label>
+                                <input type="text" class="form-control" placeholder="Enter state">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Zip</label>
+                                <input type="text" class="form-control" placeholder="Enter zip code">
+                            </div>
+                        </div><!-- Col -->
+                    </div><!-- Row -->
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Email address</label>
+                                <input type="email" class="form-control" placeholder="Enter email">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Password</label>
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                        </div><!-- Col -->
+                    </div><!-- Row -->
+                </form>
+            </div>
+            <div class="card-header">
+                <div class="p-0 cardTitle">
+
+
+                    <h5> <Icon class="mx-4" Name="IconName.Car" IconSize="IconSize.x2" />Information De Vehicule </h5>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">First Name</label>
+                                <input type="text" class="form-control" placeholder="Enter first name">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Last Name</label>
+                                <input type="text" class="form-control" placeholder="Enter last name">
+                            </div>
+                        </div><!-- Col -->
+                    </div><!-- Row -->
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">City</label>
+                                <input type="text" class="form-control" placeholder="Enter city">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">State</label>
+                                <input type="text" class="form-control" placeholder="Enter state">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Zip</label>
+                                <input type="text" class="form-control" placeholder="Enter zip code">
+                            </div>
+                        </div><!-- Col -->
+                    </div><!-- Row -->
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Email address</label>
+                                <input type="email" class="form-control" placeholder="Enter email">
+                            </div>
+                        </div><!-- Col -->
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Password</label>
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                        </div><!-- Col -->
+                    </div><!-- Row -->
+                </form>
+            </div>
+            <div class="card-header">
+                <div class="p-0 cardTitle">
+
+                    @if (serviceList.Where(x => x.Selected).Count() > 0)
+                    {
+                        <h5>
+                            <Icon class="mx-4" Name="IconName.GasPump" IconSize="IconSize.x2" />Services Count : <span class="h5">@(serviceList.Where(x => x.Selected).Count())</span>
+                        </h5>
+                    }
+                    else
+                    {
+                        <h5>
+                            <Icon class="mx-4" Name="IconName.GasPump" IconSize="IconSize.x2" />Services Count : <Span class="text-danger  h5">0 Services</Span>
+                        </h5>
+                    }
+
+                </div>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row">
+                        @foreach (var (item, index) in serviceList.GroupBy(x => x.TypeDeService).Select(x => new { x.Key }).Select((value, i) => (value, i)))
+                        {
+                            <h4>
+                                @(index + 1)    -  @item.Key
+                            </h4>
+                            @foreach (var typeService in serviceList.Where(x => x.TypeDeService == item.Key))
+                            {
+                                <div class="col-md-3">
+                                    <div class="input-group mb-1">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input class="mx-1" type="checkbox" id="@typeService.Id" @bind="typeService.Selected">
+                                                <label class="control-label mx-1">@typeService.Name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default reset">Reset</button>
+                        <button type="button" class="btn btn-primary submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Panel Footer -->
     </div>
 
-  
-    <!-- Similarly, add input fields for other properties of the Customer model -->
-    <div class="form-group">
-        <label for="services">Select Services:</label>
-        @foreach (var service in serviceList)
-        {
-            <div>
-                <input type="checkbox" id="@service.Id" @bind="service.Selected" />
-                <label for="@service.Id">@service.Name</label>
-            </div>
-        }
-    </div>
-    <button class="btn btn-primary" @onclick="SaveCustomer">Save</button>
+
 }
 @code {
     private Customer customer = new Customer();
@@ -70,14 +220,22 @@ else
     protected override async Task OnInitializedAsync()
     {
         //services = await ServiceService.GetServices(); // Replace with your actual method for fetching services
-        serviceList = new List<ServiceList> { 
-            new ServiceList { Id = 1, Name = "Vidange" } ,
-            new ServiceList { Id = 2, Name = "Boite" } ,
-            new ServiceList { Id = 3, Name = "Plaquette De Frein" } ,
-            new ServiceList { Id = 4, Name = "Suspension" } ,
+        serviceList = new List<ServiceList> {
+            new ServiceList { Id = 1, Name = "Vidange De Moteur" ,TypeDeService=TypeDeService.Lubrification} ,
+            new ServiceList { Id = 2, Name = "Vidange De Boite",TypeDeService=TypeDeService.Lubrification } ,
+            new ServiceList { Id = 3, Name = "Plaquette De Frein AV" ,TypeDeService=TypeDeService.Frein } ,
+            new ServiceList { Id = 4, Name = "Plaquette De Frein ARR", TypeDeService=TypeDeService.Frein } ,
+            new ServiceList { Id = 5, Name = "Remplacement Triangle Cote" ,TypeDeService=TypeDeService.Suspension} ,
+            new ServiceList { Id = 6, Name = "Remplacement Souflet Cote",TypeDeService=TypeDeService.Suspension } ,
+            new ServiceList { Id = 7, Name = "Remplacement Ammortisseur" ,TypeDeService =TypeDeService.Suspension} ,
+            new ServiceList { Id = 8, Name = "Remplacement Ressort" ,TypeDeService = TypeDeService.Refroidissement } ,
+            new ServiceList { Id = 9, Name = "Diagnostique Standard" ,TypeDeService = TypeDeService.Electrecite} ,
+
 
 
         }; // Replace with your actual method for fetching services
+
+
     }
 
     private void SaveCustomer()

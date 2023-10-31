@@ -47,6 +47,20 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public bool Selected { get; set; }
+        public TypeDeService TypeDeService { get; set; }
+    }
+
+    public enum  TypeDeService
+    {
+        Suspension,
+        Lubrification,
+        Filtration,
+        Frein,
+        Refroidissement,
+        Distribution,
+        Electrecite,
+
+
     }
 
 }
