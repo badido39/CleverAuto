@@ -16,7 +16,8 @@
         </PropertyColumn>
         <PropertyColumn Property="@(c => c.Name)" Sortable="true" Align="Align.Right" />
         <PropertyColumn Property="@(c => c.Email)" Sortable="true" Align="Align.Right" />
-        <PropertyColumn Property="@(c => c.Car.VIN)" Sortable="true" Align="Align.Right" />
+        <PropertyColumn Property="@(c => c.Cars[0].Services.Count)" Sortable="true" Align="Align.Right" />
+        
     </QuickGrid>
 </div>
 

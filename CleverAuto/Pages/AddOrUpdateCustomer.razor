@@ -14,6 +14,7 @@
 }
 else
 {
+    
     <div class="container body w-100 ">
 
 
@@ -32,54 +33,41 @@ else
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">First Name</label>
-                                <input type="text" class="form-control" placeholder="Enter first name">
+                                <label class="control-label"><Icon Name="IconName.UserCircle" IconSize="IconSize.Small" /> Nom & Prenom ou Siege Social</label>
+                                <input type="text" class="form-control" placeholder="Entrez Nom et Prenom" @bind="customer.Name">
                             </div>
                         </div><!-- Col -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Last Name</label>
-                                <input type="text" class="form-control" placeholder="Enter last name">
+                                <label class="control-label"><Icon Name="IconName.Phone" IconSize="IconSize.Small" /> Telephone / Mobile</label>
+                                <input type="text" class="form-control" placeholder="ex : 05## ## ## ##" @bind="customer.Phone" >
                             </div>
                         </div><!-- Col -->
                     </div><!-- Row -->
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12">
                             <div class="form-group">
-                                <label class="control-label">City</label>
-                                <input type="text" class="form-control" placeholder="Enter city">
+                                <label class="control-label"><Icon Name="IconName.Directions" IconSize="IconSize.Small" /> Adresse </label>
+                                <input type="text" class="form-control" placeholder="Entrez Adresse " >
                             </div>
                         </div><!-- Col -->
 
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label">State</label>
-                                <input type="text" class="form-control" placeholder="Enter state">
-                            </div>
-                        </div><!-- Col -->
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label">Zip</label>
-                                <input type="text" class="form-control" placeholder="Enter zip code">
-                            </div>
-                        </div><!-- Col -->
                     </div><!-- Row -->
 
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Email address</label>
-                                <input type="email" class="form-control" placeholder="Enter email">
+                                <label class="control-label"><Icon Name="IconName.Mail" IconSize="IconSize.Small" /> e-Mail</label>
+                                <input type="email" class="form-control" placeholder="ex : john@email.com">
                             </div>
                         </div><!-- Col -->
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Password</label>
-                                <input type="password" class="form-control" placeholder="Password">
+                                <label class="control-label">Memo</label>
+                                <MemoEdit Rows="2" />
                             </div>
                         </div><!-- Col -->
                     </div><!-- Row -->
@@ -96,14 +84,20 @@ else
 
                 <form>
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="control-label">First Name</label>
-                                <input type="text" class="form-control" placeholder="Enter first name">
+                                <label class="control-label"><Icon Name="IconName.IdCard" IconSize="IconSize.Small" /> VIN / Numéro de châssis</label>
+                                <input type="text" class="form-control" placeholder="Entrer 17 caractères" maxlength="17">
                             </div>
                         </div><!-- Col -->
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Marque</label>
+                                <input type="text" class="form-control" placeholder="Enter la marque" >
+                            </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label">Last Name</label>
                                 <input type="text" class="form-control" placeholder="Enter last name">
@@ -174,17 +168,17 @@ else
                     <div class="row">
                         @foreach (var (item, index) in serviceList.GroupBy(x => x.TypeDeService).Select(x => new { x.Key }).Select((value, i) => (value, i)))
                         {
-                            <h4>
+                            <h5 style="color : @TitleColors[(int)item.Key];font-weight:900">
                                 @(index + 1)    -  @item.Key
-                            </h4>
+                            </h5>
                             @foreach (var typeService in serviceList.Where(x => x.TypeDeService == item.Key))
                             {
-                                <div class="col-md-3">
+                                <div class="col-md-3 mx-2">
                                     <div class="input-group mb-1">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <input class="mx-1" type="checkbox" id="@typeService.Id" @bind="typeService.Selected">
-                                                <label class="control-label mx-1">@typeService.Name</label>
+                                                <Check TValue="bool" class="p-0 ml-2" @bind-Checked="@typeService.Selected">@typeService.Name</Check>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -197,14 +191,14 @@ else
                 </form>
             </div>
         </div>
-
+      
 
         <div class="card-footer">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="pull-right">
-                        <button type="button" class="btn btn-default reset">Reset</button>
-                        <button type="button" class="btn btn-primary submit">Submit</button>
+                        <button type="button" class="btn btn-default reset" >Reset</button>
+                        <button type="button" class="btn btn-primary submit" @onclick="SaveCustomer">Submit</button>
                     </div>
                 </div>
             </div>
@@ -213,9 +207,13 @@ else
 
 
 }
+
 @code {
-    private Customer customer = new Customer();
+    private Customer customer= new();
     private List<ServiceList> serviceList;
+    private List<string> TitleColors = new List<string>();
+   
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -231,22 +229,36 @@ else
             new ServiceList { Id = 8, Name = "Remplacement Ressort" ,TypeDeService = TypeDeService.Refroidissement } ,
             new ServiceList { Id = 9, Name = "Diagnostique Standard" ,TypeDeService = TypeDeService.Electrecite} ,
 
-
-
         }; // Replace with your actual method for fetching services
 
-
+        int steps = serviceList.Count(); // Adjust the number of steps as needed
+        for (int i = 0; i <= steps; i++)
+        {
+            string color = InterpolateColor(0, 0, 255, 255, 0, 255, (double)i / steps);
+            TitleColors.Add(color);
+        }
     }
 
     private void SaveCustomer()
     {
         var ServiceToAdd = serviceList.Where(s => s.Selected).ToList();
+        Car car = new();
         foreach (var service in ServiceToAdd)
         {
-            customer.Car.Services.Add(new Service { Type = service.Name, DateOfService = DateTime.Now, ReminderSent = false });
+            car.Services.Add(new Service { Type = service.Name, DateOfService = DateTime.Now, ReminderSent = false });
         }
+        customer.Cars.Add(car);
         CustomerService.AddCustomer(customer);
         NavigationManager.NavigateTo("/listCustomers");
+      
+    }
+    
+   private string InterpolateColor(int r1, int g1, int b1, int r2, int g2, int b2, double t)
+    {
+        int r = (int)(r1 + (r2 - r1) * t);
+        int g = (int)(g1 + (g2 - g1) * t);
+        int b = (int)(b1 + (b2 - b1) * t);
 
+        return $"#{r:X2}{g:X2}{b:X2}";
     }
 }
