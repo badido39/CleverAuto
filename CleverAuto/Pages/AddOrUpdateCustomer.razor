@@ -3,6 +3,7 @@
 @using CleverAuto.Models
 @using CleverAuto.Services
 @using System.Collections.ObjectModel;
+@using System.Diagnostics;
 @inject ICustomerService CustomerService;
 @inject NavigationManager NavigationManager
 
@@ -94,7 +95,15 @@ else
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label">Marque</label>
-                                <input type="text" class="form-control" placeholder="Enter la marque" @bind="car.Make">
+                                <select class="form-control" @bind="car.Make" >
+                                    <option value="" disabled selected>Selectiner marque</option>
+
+                                    @foreach (var item in CarMakes)
+                                    {
+
+                                        <option value="@item.ToUpper()">@item.ToUpper()</option>
+                                    }
+                                </select>
                             </div>
                         </div><!-- Col -->
                         <div class="col-sm-3">
@@ -129,30 +138,16 @@ else
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label">Frequence de conduite</label>
-                                <select class="form-control" id="dropdownList"  @onchange="OnDropdownChange">
-                                    <option value="@UseOfCarPerDay.NORMAL">Option 1</option>
-                                    <option value="@UseOfCarPerDay.MEDIUM">Option 2</option>
-                                    <option value="@UseOfCarPerDay.INTENCE">Option 3</option>
+                                <select class="form-control" id="dropdownList" @onchange="OnDropdownChange">
+                                    <option value="NORMAL">Usage Normal 100km/j</option>
+                                    <option value="MEDIUM">Usage Moyen 200km/j</option>
+                                    <option value="INTENCE">Usage intense 300km/j</option>
                                 </select>
                             </div>
                         </div><!-- Col -->
                     </div><!-- Row -->
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label">Email address</label>
-                                <input type="email" class="form-control" placeholder="Enter email">
-                            </div>
-                        </div><!-- Col -->
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label">Password</label>
-                                <input type="password" class="form-control" placeholder="Password">
-                            </div>
-                        </div><!-- Col -->
-                    </div><!-- Row -->
+                  
                 </form>
             </div>
             <div class="card-header">
@@ -221,18 +216,33 @@ else
 @code {
     private Customer customer= new();
     private Car car = new();
+
     private List<ServiceList> serviceList;
     private List<string> TitleColors = new List<string>();
-   
-    
+
+
     private void OnDropdownChange(ChangeEventArgs e)
+
     {
-    car.UseOfCarPerDay= (UseOfCarPerDay)e.Value;
-       
+        var enumName = e.Value.ToString();
+        if (Enum.TryParse(enumName, out UseOfCarPerDay result))
+        {
+            Debug.WriteLine($"the value is {result }");
+            car.UseOfCarPerDay = result;
+        }
+        else
+        {
+            Debug.WriteLine($"Not Parsed {e.Value}");
+            // Handle the case where the parsing fails
+            // You can use logging or any appropriate error handling mechanism here
+        }
+
+
     }
 
     protected override async Task OnInitializedAsync()
     {
+        car.UseOfCarPerDay = UseOfCarPerDay.NORMAL;
         //services = await ServiceService.GetServices(); // Replace with your actual method for fetching services
         serviceList = new List<ServiceList> {
             new ServiceList { Id = 1, Name = "Vidange De Moteur" ,TypeDeService=TypeDeService.Lubrification} ,
@@ -277,4 +287,58 @@ else
 
         return $"#{r:X2}{g:X2}{b:X2}";
     }
+  private List<string> CarMakes = new List<string>
+{
+    "Acura",
+    "Alfa Romeo",
+    "Aston Martin",
+    "Audi",
+    "Bentley",
+    "BMW",
+    "Bugatti",
+    "Buick",
+    "Cadillac",
+    "Chevrolet",
+    "Chrysler",
+    "Citroen",
+    "Dodge",
+    "Ferrari",
+    "Fiat",
+    "Ford",
+    "Geely",
+    "General Motors",
+    "GMC",
+    "Honda",
+    "Hyundai",
+    "Infiniti",
+    "Jaguar",
+    "Jeep",
+    "Kia",
+    "Koenigsegg",
+    "Lamborghini",
+    "Land Rover",
+    "Lexus",
+    "Maserati",
+    "Mazda",
+    "McLaren",
+    "Mercedes-Benz",
+    "Mini",
+    "Mitsubishi",
+    "Nissan",
+    "Pagani",
+    "Peugeot",
+    "Porsche",
+    "Ram",
+    "Renault",
+    "Rolls-Royce",
+    "Saab",
+    "Subaru",
+    "Suzuki",
+    "Tata Motors",
+    "Tesla",
+    "Toyota",
+    "Volkswagen",
+    "Volvo"
+    // Add other car makes as needed
+};
 }

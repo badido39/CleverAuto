@@ -14,3 +14,8 @@
     font-family: 'Josefin-medium';
     src: url('../fonts/JosefinSans-Medium.ttf');
 }
+.control-label {
+    color: brown;
+    font-weight: 500;
+    font-family: 'Josefin-medium';
+}
