@@ -60,7 +60,7 @@ else
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label"><Icon Name="IconName.Mail" IconSize="IconSize.Small" /> e-Mail</label>
-                                <input type="email" class="form-control" placeholder="ex : john@email.com">
+                                <input type="email" class="form-control" placeholder="ex : john@email.com" @bind="customer.Email">
                             </div>
                         </div><!-- Col -->
 
@@ -87,43 +87,53 @@ else
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"><Icon Name="IconName.IdCard" IconSize="IconSize.Small" /> VIN / Numéro de châssis</label>
-                                <input type="text" class="form-control" placeholder="Entrer 17 caractères" maxlength="17">
+                                <input type="text" class="form-control" placeholder="Entrer 17 caractères" maxlength="17" @bind="car.VIN">
                             </div>
                         </div><!-- Col -->
 
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label">Marque</label>
-                                <input type="text" class="form-control" placeholder="Enter la marque" >
+                                <input type="text" class="form-control" placeholder="Enter la marque" @bind="car.Make">
                             </div>
                         </div><!-- Col -->
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="control-label">Last Name</label>
-                                <input type="text" class="form-control" placeholder="Enter last name">
+                                <label class="control-label">Modele</label>
+                                <input type="text" class="form-control" placeholder="Enter last name" @bind="car.Model">
                             </div>
                         </div><!-- Col -->
                     </div><!-- Row -->
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <div class="form-group">
-                                <label class="control-label">City</label>
-                                <input type="text" class="form-control" placeholder="Enter city">
+                                <label class="control-label">Annee</label>
+                                <input type="text" class="form-control" placeholder="Annee">
                             </div>
                         </div><!-- Col -->
 
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label class="control-label">State</label>
-                                <input type="text" class="form-control" placeholder="Enter state">
+                                <label class="control-label">Immatricule</label>
+                                <input type="text" class="form-control" placeholder="Immatricule">
                             </div>
                         </div><!-- Col -->
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <div class="form-group">
-                                <label class="control-label">Zip</label>
-                                <input type="text" class="form-control" placeholder="Enter zip code">
+                                <label class="control-label">Kilometrage</label>
+                                <input type="number" class="form-control" placeholder="Kilomertage actuel">
+                            </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Frequence de conduite</label>
+                                <select class="form-control" id="dropdownList"  @onchange="OnDropdownChange">
+                                    <option value="@UseOfCarPerDay.NORMAL">Option 1</option>
+                                    <option value="@UseOfCarPerDay.MEDIUM">Option 2</option>
+                                    <option value="@UseOfCarPerDay.INTENCE">Option 3</option>
+                                </select>
                             </div>
                         </div><!-- Col -->
                     </div><!-- Row -->
@@ -210,10 +220,16 @@ else
 
 @code {
     private Customer customer= new();
+    private Car car = new();
     private List<ServiceList> serviceList;
     private List<string> TitleColors = new List<string>();
    
-
+    
+    private void OnDropdownChange(ChangeEventArgs e)
+    {
+    car.UseOfCarPerDay= (UseOfCarPerDay)e.Value;
+       
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -242,7 +258,7 @@ else
     private void SaveCustomer()
     {
         var ServiceToAdd = serviceList.Where(s => s.Selected).ToList();
-        Car car = new();
+       
         foreach (var service in ServiceToAdd)
         {
             car.Services.Add(new Service { Type = service.Name, DateOfService = DateTime.Now, ReminderSent = false });
