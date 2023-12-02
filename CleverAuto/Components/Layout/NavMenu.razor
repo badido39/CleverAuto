@@ -1,0 +1,33 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid justify-content-center">
+        <a class="navbar-brand" href="">CLEVER AUTO</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Customer">
+                <img src="images/icons/icons8-customer-48.png" class="m-0" width="32" /> <span class="mx-2">Client</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Supplier">
+                <img src="images/icons/icons8-supplier-64.png" class="m-0" width="32" /> <span class="mx-2">Fournisseur</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Product">
+                <img src="images/icons/icons8-product-64.png" class="m-0" width="32" /> <span class="mx-2">Produit</span>
+            </NavLink>
+        </div>
+
+    </nav>
+</div>

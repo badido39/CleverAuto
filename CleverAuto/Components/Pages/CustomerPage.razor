@@ -1,0 +1,60 @@
+﻿@page "/Customer/"
+@using CleverAuto.Data
+@using CleverAuto.Models
+@using CleverAuto.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject ICustomerService CustomerService
+
+<h3>Customer</h3>
+
+
+<button class="btn btn-primary">Add Customer</button>
+<div class="grid">
+    <QuickGrid Items="@FilteredItems" Pagination="@pagination">
+
+        <PropertyColumn Property="@(c => c.Name)" Sortable="true" Class="country-name">
+            <ColumnOptions>
+                <div class="search-box">
+                    <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Country name..." />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Property="@(c => c.Name)" Sortable="true" Align="Align.Right" />
+        <PropertyColumn Property="@(c => c.Phone)" Sortable="true" Align="Align.Right" />
+        <PropertyColumn Property="@(c => c.Email)" Sortable="true" Align="Align.Right" />
+        <TemplateColumn Title="Cars">
+            <div>
+                <span>(@context.Cars.Count)</span>
+                @foreach (var item in context.Cars)
+                {
+
+                    <span>@item.Make</span>
+                }
+            </div>
+        </TemplateColumn>
+    </QuickGrid>
+</div>
+<Paginator State="@pagination" />
+
+@code {
+    IQueryable<Customer>? items;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
+    string nameFilter = string.Empty;
+
+    string[] Makes = { "Honda", "BMW", "Porsh", "Toyota", "Camery" };
+
+    IQueryable<Customer>? FilteredItems => items?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        Random rnd = new();
+        items = (await CustomerService.GetCustomersAsync()).AsQueryable();
+        foreach (var item in items)
+        {
+            item.Cars.Add(new Car { Make = Makes[rnd.Next(0, 4)] });
+        }
+
+    }
+
+
+}

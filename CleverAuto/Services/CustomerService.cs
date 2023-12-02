@@ -1,4 +1,5 @@
-﻿using CleverAuto.Helpers;
+﻿using CleverAuto.Data;
+using CleverAuto.Helpers;
 using CleverAuto.Models;
 using Newtonsoft.Json;
 using System;
@@ -14,10 +15,12 @@ namespace CleverAuto.Services
     public class CustomerServiceRemote : ICustomerService
     {
         private readonly HttpClientInstance _httpClientInstance;
+        private readonly AppDbContext dbContext;
 
-        public CustomerServiceRemote(HttpClientInstance httpClientInstance)
+        public CustomerServiceRemote(HttpClientInstance httpClientInstance, AppDbContext dbContext)
         {
             _httpClientInstance = httpClientInstance;
+            this.dbContext = dbContext;
         }
 
         public async Task AddCustomer(Customer customer)
@@ -63,11 +66,17 @@ namespace CleverAuto.Services
             }
             
         }
+
+        public Task<List<Customer>> GetCustomersAsync()
+        {
+            return Task.FromResult( dbContext.Customers.ToList());
+        }
     }
     public interface ICustomerService
     {
         public Task<Customer[]> GetAllCustomerAsync();
         public Task AddCustomer(Customer customer);
+        public Task<List<Customer>> GetCustomersAsync();
 
     }
 }
