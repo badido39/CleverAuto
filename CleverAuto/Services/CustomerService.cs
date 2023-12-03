@@ -36,7 +36,7 @@ namespace CleverAuto.Services
 
         public Task<Customer> GetCustomerById(int customerId)
         {
-            return Task.FromResult(_dbContext.Customers.FirstOrDefault(x => x.Id == customerId));
+            return Task.FromResult(_dbContext.Customers.Include(x=>x.Cars).FirstOrDefault(x => x.Id == customerId));
         }
 
         public Task<List<Customer>> GetCustomersAsync()

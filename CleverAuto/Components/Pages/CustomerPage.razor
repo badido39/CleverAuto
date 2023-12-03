@@ -14,7 +14,7 @@
     <div class="justify-content-end col-10 page-size-chooser">
         Items per page:
         <select style="font-size:12px" @bind="@pagination.ItemsPerPage" >
-            <option selected>5</option>
+            <option>5</option>
             <option>10</option>
             <option>20</option>
             <option>50</option>
@@ -22,8 +22,8 @@
     </div>
 </div>
 <div class="grid">
-    <QuickGrid Items="@FilteredItems" Pagination="@pagination" Class="row" >
-        <PropertyColumn Class="col-1" Property="@(c => c.Id)" Sortable="true" Align="Align.Right" />
+    <QuickGrid   Items="@FilteredItems" Pagination="@pagination"  >
+        <PropertyColumn  Class="col-1" Property="@(c => c.Id)" Sortable="true" Align="Align.Center" />
         <PropertyColumn Class="col-3 country-name" Property="@(c => c.Name)" Sortable="true">
             <ColumnOptions>
                 <div class="search-box">
@@ -31,7 +31,7 @@
                 </div>
             </ColumnOptions>
         </PropertyColumn>
-        <PropertyColumn Class="col-1" Property="@(c => c.Phone)" Sortable="true" Align="Align.Right" />
+        <PropertyColumn Class="col-1" Property="@(c => c.Phone)" Sortable="true" Align="Align.Start" />
         <PropertyColumn Class="col-2" Property="@(c => c.Email)" Sortable="true" Align="Align.Right" />
         <TemplateColumn Class="col-3 "Title="Cars">
             @if (context.Cars.Count == 0)
@@ -77,6 +77,13 @@
             }
 
         </TemplateColumn>
+         <TemplateColumn Class="col-1 "Title="Actions">
+             <div class="d-inline-flex">
+                <button @onclick="()=>EditCustomer(context.Id)" class="col-12 w-50 btn btn-sm btn-primary   mt-0 mb-0 mx-1">Edit</button>
+                <button class="col-12 w-50 btn btn-sm btn-danger   mt-0 mb-0">Delete</button>
+
+             </div>
+         </TemplateColumn>
     </QuickGrid>
 </div>
 <Paginator State="@pagination" />
@@ -99,5 +106,10 @@
     private void AddCustomer()
     {
         navigation.NavigateTo($"/customerform/");
+    }
+
+    private void EditCustomer(int id)
+    {
+        navigation.NavigateTo($"/customerform/{id}");
     }
 }

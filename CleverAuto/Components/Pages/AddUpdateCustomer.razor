@@ -1,26 +1,106 @@
 ﻿@page "/customerform/{customerId:int?}"
+@using Microsoft.AspNetCore.Components.QuickGrid
 @inject ICustomerService service
 <h3>Customer Form</h3>
 
 @if (customer != null)
 {
     <form @onsubmit="Save">
-        <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
-            <input @bind="customer.Name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+        <div class="row">
+            <div class="col"><hr></div>
+            <div class="col-auto fw-bold text-primary">Customer</div>
+            <div class="col"><hr></div>
         </div>
-        <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Phone</span>
-            <input @bind="customer.Phone" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
-        </div>
-        <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
-            <input @bind="customer.Email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-        </div>
-        
+        <div class="row">
+            <div class="col-6">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+                    <input @bind="customer.Name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Phone</span>
+                    <input @bind="customer.Phone" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+                    <input @bind="customer.Email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+            </div>
+            <div class="col-6">
+                
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Company</span>
+                        <input @bind="customer.Name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Adresse</span>
+                        <input @bind="customer.Phone" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Register</span>
+                        <input @bind="customer.Email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                
+            </div>
 
-        <button type="submit" class="btn btn-primary" >@((customerId == null) ? "Add" : "Update")</button>
+        </div>
+        <div class="row">
+            <div class="col-1"><hr></div>
+            <div class="col-auto fw-bold text-primary">Car</div>
+            <div class="col"><hr></div>
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Vin</span>
+                    <input @bind="newCar.VIN" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Make</span>
+                    <input @bind="newCar.Make" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Model</span>
+                    <input @bind="newCar.Model" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Plate Number</span>
+                    <input @bind="newCar.PlateNumber" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+            </div>
+            <div class="col-3">
+
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Mileage</span>
+                    <input @bind="newCar.CurrentMileage" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Year</span>
+                    <input @bind="newCar.YearOfFirstUse" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Usage</span>
+                    <select class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" style="font-size:12px" @bind="@newCar.UseOfCarPerDay">
+                        <option>@UseOfCarPerDay.NORMAL</option>
+                        <option>@UseOfCarPerDay.MEDIUM</option>
+                        <option>@UseOfCarPerDay.INTENCE</option>
+
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary">@((customerId == null) ? "Add" : "Update")</button>
     </form>
+
+
+
+
+
+
 }
 else
 {
@@ -29,6 +109,7 @@ else
 
 @code {
     private Customer customer;
+    private Car newCar = new();
     private int? customerId;
 
     [Parameter]
@@ -45,6 +126,8 @@ else
     protected override void OnInitialized()
     {
         LoadCustomer();
+        newCar.UseOfCarPerDay = UseOfCarPerDay.NORMAL; // Set the default value here
+
     }
 
     private void LoadCustomer()
@@ -54,6 +137,11 @@ else
             // Fetch the customer from a database or another source based on the provided ID
             // For simplicity, let's create a dummy customer for demonstration
             customer = service.GetCustomerById(customerId.Value).Result;
+            if (customer.Cars.Any())
+            {
+
+                newCar = customer.Cars.FirstOrDefault();
+            }
         }
         else
         {
@@ -67,12 +155,12 @@ else
     {
         if (customerId.HasValue)
         {
-
             service.UpdateCustomer(customer);
-            
+
         }
         else
         {
+
             service.AddCustomer(customer);
         }
         ResetForm();
