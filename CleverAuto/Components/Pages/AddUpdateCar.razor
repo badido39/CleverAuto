@@ -1,0 +1,71 @@
+﻿@page "/carform/{carId:int?}"
+@inject ICarService service
+<h3>Car Form</h3>
+
+@if (customer != null)
+{
+    <form>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+            <input @bind="customer.Name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Phone</span>
+            <input @bind="customer.Phone" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+            <input @bind="customer.Email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        
+
+        <button class="btn btn-primary" @onclick="Save">@((customerId == null) ? "Add" : "Update")</button>
+    </form>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    private Customer customer;
+    private int? customerId;
+
+    [Parameter]
+    public int? CustomerId
+    {
+        get { return customerId; }
+        set
+        {
+            customerId = value;
+            LoadCustomer();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        LoadCustomer();
+    }
+
+    private void LoadCustomer()
+    {
+        if (customerId.HasValue)
+        {
+            // Fetch the customer from a database or another source based on the provided ID
+            // For simplicity, let's create a dummy customer for demonstration
+        }
+        else
+        {
+
+            // Creating a new customer for adding
+            customer = new Customer();
+        }
+    }
+
+    private void Save()
+    {
+        // Perform save logic (you can save the customer object to a database, for example)
+        // For simplicity, let's just print the details here
+        Console.WriteLine($"Saved customer: {customer.Id}, {customer.Name}, {customer.Email}");
+    }
+}

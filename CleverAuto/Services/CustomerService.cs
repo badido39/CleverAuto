@@ -1,6 +1,7 @@
 ﻿using CleverAuto.Data;
 using CleverAuto.Helpers;
 using CleverAuto.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,71 +13,50 @@ using System.Threading.Tasks;
 
 namespace CleverAuto.Services
 {
-    public class CustomerServiceRemote : ICustomerService
+    public class CustomerService : ICustomerService
     {
-        private readonly HttpClientInstance _httpClientInstance;
-        private readonly AppDbContext dbContext;
+        private readonly AppDbContext _dbContext;
 
-        public CustomerServiceRemote(HttpClientInstance httpClientInstance, AppDbContext dbContext)
+        public CustomerService(AppDbContext dbContext)
         {
-            _httpClientInstance = httpClientInstance;
-            this.dbContext = dbContext;
+
+            _dbContext = dbContext;
         }
 
-        public async Task AddCustomer(Customer customer)
+        public  void AddCustomer(Customer customer)
         {
-            try
-            {
-                var jsonCustomer = JsonConvert.SerializeObject(customer);
-                var content = new StringContent(jsonCustomer, Encoding.UTF8, "application/json");
-
-                var response = await _httpClientInstance.GetHttpClientInstance().PostAsync("api/Customer/CreateCustomerWithCarAndService", content);
-
-                response.EnsureSuccessStatusCode(); // Throw if not a success code
-
-                // Handle response if needed
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(responseContent);
-            }
-            catch (HttpRequestException e)
-            {
-                // Handle exception
-                Debug.WriteLine($"Request failed: {e.Message}");
-            }
+            _dbContext.Customers.Add(customer);
+            _dbContext.SaveChanges();
         }
 
-        public async Task<Customer[]> GetAllCustomerAsync( )
+        public Task<Customer[]> GetAllCustomerAsync()
         {
-            try
-            {
-               
-               
-                HttpResponseMessage response = await _httpClientInstance.GetHttpClientInstance().GetAsync("api/Customer/GetAllCustomers");
+            throw new NotImplementedException();
+        }
 
-
-                var result = await response.Content.ReadAsStringAsync();
-
-                List<Customer> Customers = JsonConvert.DeserializeObject<List<Customer>>(result);
-                return Customers.ToArray();
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-            
+        public Task<Customer> GetCustomerById(int customerId)
+        {
+            return Task.FromResult(_dbContext.Customers.FirstOrDefault(x => x.Id == customerId));
         }
 
         public Task<List<Customer>> GetCustomersAsync()
         {
-            return Task.FromResult( dbContext.Customers.ToList());
+            return Task.FromResult( _dbContext.Customers.Include(x=>x.Cars).ThenInclude(x=>x.Services).ToList());;
+        }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            _dbContext.Customers.Update(customer);
+            _dbContext.SaveChanges();
         }
     }
     public interface ICustomerService
     {
         public Task<Customer[]> GetAllCustomerAsync();
-        public Task AddCustomer(Customer customer);
+        public void AddCustomer(Customer customer);
+        public void UpdateCustomer(Customer customer);
         public Task<List<Customer>> GetCustomersAsync();
+        public Task<Customer> GetCustomerById(int customerId);
 
     }
 }

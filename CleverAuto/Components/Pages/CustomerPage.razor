@@ -3,34 +3,79 @@
 @using CleverAuto.Models
 @using CleverAuto.Services
 @using Microsoft.AspNetCore.Components.QuickGrid
+@inject NavigationManager navigation
 @inject ICustomerService CustomerService
 
 <h3>Customer</h3>
 
+<div class="row">
 
-<button class="btn btn-primary">Add Customer</button>
+    <button class="col-2 btn btn-sm btn-outline-primary fw-bolder mb-3" @onclick="()=>AddCustomer()">Add Customer</button>
+    <div class="justify-content-end col-10 page-size-chooser">
+        Items per page:
+        <select style="font-size:12px" @bind="@pagination.ItemsPerPage" >
+            <option selected>5</option>
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+        </select>
+    </div>
+</div>
 <div class="grid">
-    <QuickGrid Items="@FilteredItems" Pagination="@pagination">
-
-        <PropertyColumn Property="@(c => c.Name)" Sortable="true" Class="country-name">
+    <QuickGrid Items="@FilteredItems" Pagination="@pagination" Class="row" >
+        <PropertyColumn Class="col-1" Property="@(c => c.Id)" Sortable="true" Align="Align.Right" />
+        <PropertyColumn Class="col-3 country-name" Property="@(c => c.Name)" Sortable="true">
             <ColumnOptions>
                 <div class="search-box">
-                    <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Country name..." />
+                    <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Customer name..." />
                 </div>
             </ColumnOptions>
         </PropertyColumn>
-        <PropertyColumn Property="@(c => c.Name)" Sortable="true" Align="Align.Right" />
-        <PropertyColumn Property="@(c => c.Phone)" Sortable="true" Align="Align.Right" />
-        <PropertyColumn Property="@(c => c.Email)" Sortable="true" Align="Align.Right" />
-        <TemplateColumn Title="Cars">
-            <div>
-                <span>(@context.Cars.Count)</span>
-                @foreach (var item in context.Cars)
-                {
+        <PropertyColumn Class="col-1" Property="@(c => c.Phone)" Sortable="true" Align="Align.Right" />
+        <PropertyColumn Class="col-2" Property="@(c => c.Email)" Sortable="true" Align="Align.Right" />
+        <TemplateColumn Class="col-3 "Title="Cars">
+            @if (context.Cars.Count == 0)
+            {
+                <button class="col-12 btn btn-sm btn-outline-success fw-bolder mt-0 mb-0">Add Car</button>
 
-                    <span>@item.Make</span>
-                }
-            </div>
+            }
+            else
+            {
+
+                <div>
+                    <ol id="carList">
+                        @foreach (var car in context.Cars)
+                        {
+                            <li>
+
+
+                                <span style="font-weight:600; width:100px">@car.Make</span> |
+                                <span style="color:blue;cursor:pointer" onclick="toggleServices(this)">Services :@car.Services.Count</span>
+
+                                <ol class="services-list" style="display: none;">
+                                    <!-- Add a class for easier selection -->
+                                    @foreach (var service in car.Services)
+                                    {
+                                        <li>
+                                            <span style="color:black" >@service.Type</span>
+                                        </li>
+                                    }
+                                </ol>
+                            </li>
+                        }
+                    </ol>
+                </div>
+
+                <script>
+                    function toggleServices(h6Element) {
+                        var servicesList = h6Element.nextElementSibling; // Assuming the structure remains consistent
+
+                        // Toggle the display property directly
+                        servicesList.style.display = (servicesList.style.display === 'none' || servicesList.style.display === '') ? 'block' : 'none';
+                    }
+                </script>
+            }
+
         </TemplateColumn>
     </QuickGrid>
 </div>
@@ -41,20 +86,18 @@
     PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
     string nameFilter = string.Empty;
 
-    string[] Makes = { "Honda", "BMW", "Porsh", "Toyota", "Camery" };
 
     IQueryable<Customer>? FilteredItems => items?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
-        Random rnd = new();
+
         items = (await CustomerService.GetCustomersAsync()).AsQueryable();
-        foreach (var item in items)
-        {
-            item.Cars.Add(new Car { Make = Makes[rnd.Next(0, 4)] });
-        }
 
     }
 
-
+    private void AddCustomer()
+    {
+        navigation.NavigateTo($"/customerform/");
+    }
 }
