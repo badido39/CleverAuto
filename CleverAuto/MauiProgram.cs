@@ -48,7 +48,7 @@ namespace CleverAuto
             });
 #endif
             builder.Services.AddMauiBlazorWebView();
-
+            builder.Services.AddBlazorBootstrap(); // Add this line
             builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Filename=AppDatabase.db3"));;
 
 #if DEBUG
