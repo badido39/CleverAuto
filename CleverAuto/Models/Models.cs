@@ -74,32 +74,22 @@ namespace CleverAuto.Models
 
     }
 
-    public class ServiceList
+    public class Product
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonPropertyName("id")]
         public int Id { get; set; }
-        
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-        [JsonPropertyName("selected")]
-        public bool Selected { get; set; }
-        [JsonPropertyName("typedeservice")]
-        public TypeDeService TypeDeService { get; set; }
+
+        [JsonPropertyName("reference")]
+        public string Reference { get; set; } = string.Empty;
+
+        [JsonPropertyName("costprice")]
+        public decimal CostPrice { get; set; }= decimal.MaxValue;
+        [JsonPropertyName("sellprice")]
+        public decimal SellPrice { get; set; }=decimal.MaxValue;
     }
-
-    public enum  TypeDeService
-    {
-        Suspension,
-        Lubrification,
-        Filtration,
-        Frein,
-        Refroidissement,
-        Distribution,
-        Electrecite,
-
-
-    }
+  
+   
 
 }

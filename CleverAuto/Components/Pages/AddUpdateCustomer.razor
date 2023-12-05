@@ -1,4 +1,5 @@
 ﻿@page "/customerform/{customerId:int?}"
+@using BlazorBootstrap
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject ICustomerService service
 <h3>Customer Form</h3>
@@ -63,32 +64,34 @@
 
                 <button type="button" @onclick="()=>SelectCar(item.Id)" class="btn btn-outline-success btn-sm m-2 fw-bold"> @item.Id - @item.Make</button>
                 </div>
+                <button @onclick="()=>DeleteCar(item.Id)" class="mt-3 btn btn-danger">Delete</button>
+
             }
             <div class="row">
                 <div class="col-3">
                    
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Vin</span>
-                        <input @bind="SelectedCar.VIN" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                        <input placeholder="Enter VIN" @bind="SelectedCar.VIN" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
                     </div>
                     <div class="input-group input-group-sm mb-3 ">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Make</span>
-                        <input id="myInput" placeholder="Enter Model" @bind="SelectedCar.Make" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                        <input id="myInput" placeholder="Enter Make" @bind="SelectedCar.Make" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Model</span>
-                        <input @bind="SelectedCar.Model" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                        <input placeholder="Enter Model" @bind="SelectedCar.Model" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Plate Number</span>
-                        <input @bind="SelectedCar.PlateNumber" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                        <span  class="input-group-text" id="inputGroup-sizing-sm">Plate Number</span>
+                        <input placeholder="Enter Plate Number" @bind="SelectedCar.PlateNumber" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
                     </div>
                 </div>
                 <div class="col-3">
 
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Mileage</span>
-                        <input @bind="SelectedCar.CurrentMileage" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+                        <input placeholder="Enter current Mileage" @bind="SelectedCar.CurrentMileage" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Year</span>
@@ -97,7 +100,7 @@
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Usage</span>
                         <select class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" style="font-size:12px" @bind="@SelectedCar.UseOfCarPerDay">
-                            <option>@UseOfCarPerDay.NORMAL</option>
+                            <option selected>@UseOfCarPerDay.NORMAL</option>
                             <option>@UseOfCarPerDay.MEDIUM</option>
                             <option>@UseOfCarPerDay.INTENCE</option>
 
@@ -105,18 +108,27 @@
                     </div>
 
                 </div>
-                <div class="col-6">
+                <div class="col-6 border-start border-2 border-dark">
+                    <div class="color-light row text-center  mb-2">
+
+                        <h5 class=" fw-bold text-primary">Services</h5>
+                    </div>
+
                     @foreach (var item in SelectedCar.Services)
                     {
-                        <div class="input-group input-group-sm mb-3 row">
-                            <span class="bg-primary color-light input-group-text col-1" id="inputGroup-sizing-sm">@item.Id</span>
+                        <div class="input-group input-group-sm mb-3 row mx-2">
+                            <span class="bg-light color-light input-group-text col-auto" id="inputGroup-sizing-sm">@item.Id</span>
                             <input @bind="item.Type" type="text" class="form-control " aria-describedby="inputGroup-sizing-sm" required>
-                            <span class="bg-primary color-light input-group-text col-4" id="inputGroup-sizing-sm">@item.DateOfService.ToShortDateString()</span>
+                            <span class="bg-light color-light input-group-text col-auto" id="inputGroup-sizing-sm">@item.DateOfService.ToShortDateString()</span>
 
                         </div>
+                    
                         
                     }
-                    
+                    <div class="text-center">
+                    <button  class="mt-3 btn btn-primary">Add Services</button>
+
+                    </div>
 
                 </div>
 
@@ -129,7 +141,7 @@
 
         <button type="submit" class="btn btn-primary">@((customerId == null) ? "Add" : "Update")</button>
     </form>
-        <button @onclick="AddNewCar" class="mt-3 btn btn-primary">Add New Car</button>
+        <button disabled="@IsAddingACar" @onclick="AddNewCar" class="mt-3 btn btn-primary">Add New Car</button>
 
 
 
@@ -164,11 +176,12 @@ else
 
         return toastMessage;
     }
-
+    private bool IsAddingACar = false;
     private Customer customer;
     private Car newCar = new();
     private Car SelectedCar = new();
     private List<Car> CustomerCars = new();
+    private Car newCarToAdd = new();
     private int? customerId;
 
     [Parameter]
@@ -217,11 +230,14 @@ else
         {
             service.UpdateCustomer(customer);
             ShowMessage(ToastType.Success, "Update", $"{DateTime.Now}",$"Customer  : {customer.Name} updated succufuly ",true);
+            IsAddingACar = false;
         }
         else
         {
             service.AddCustomer(customer);
             ShowMessage(ToastType.Light, "Save", $"{DateTime.Now}", $"Customer  : {customer.Name} Saved succufuly ",false);
+            IsAddingACar = false;
+
         }
         ResetForm();
     }
@@ -237,12 +253,20 @@ else
     }
     private void AddNewCar()
     {
-        Car newCarToAdd = new();
+        IsAddingACar = true;
+        newCarToAdd = new();
+        newCarToAdd.UseOfCarPerDay = UseOfCarPerDay.NORMAL; // Set the default value here
         CustomerCars.Add(newCarToAdd);
         SelectCar(newCarToAdd.Id);
 
         StateHasChanged();
     }
-
+    private void DeleteCar(int id)
+    {
+        Car CarToRemove  = CustomerCars.FirstOrDefault(x => x.Id == id);
+        CustomerCars.Remove(CarToRemove);
+        IsAddingACar = false;
+        StateHasChanged();
+    }
 
 }

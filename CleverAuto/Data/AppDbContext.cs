@@ -25,7 +25,7 @@ namespace CleverAuto.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<ServiceList> ServiceLists { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -105,7 +105,8 @@ namespace CleverAuto.Data
                     CarId= 1,
                     DateOfService=DateTime.UtcNow,
                     Type="Freins et Suspention",
-                    ReminderSent=false
+                    ReminderSent=false,
+                
                 } ,
                  new Service
                  {
