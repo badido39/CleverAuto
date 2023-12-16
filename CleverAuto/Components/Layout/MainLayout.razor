@@ -1,13 +1,150 @@
 ﻿@inherits LayoutComponentBase
+@using System.Diagnostics
+@inject SignalRService signalRservice
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main style=" background-color:#b5bdc6;">
-        
+        <div class="container">
+            <div class="d-flex justify-content-end p-1 m-2">
+                <div class="d-flex mt-1 mb-1 ">
+                    <div style=" background-color:@ConnectionStatusColor ;height:20px ;width:20px ; border-radius:10px"></div>
+                    <div class="mx-2">
+                        <span style="color: @ConnectionStatusColor ;font-weight:bold"></span>
+                    </div>
+                </div>
+                <div>
+
+                    <p style="font-size:20px;position:relative ;cursor:pointer" @onclick="OnShowOffcanvasClick">
+                        ✉️
+                        @if (Noticiations.Count > 0)
+                        {
+
+                            <Badge style="font-size:12px" Color="BadgeColor.Danger"
+                                   Position="Position.Relative"
+                                   Placement="BadgePlacement.TopLeft"
+                                   IndicatorType="BadgeIndicatorType.RoundedPill"
+                                   VisuallyHiddenText="unread messages">@Noticiations.Count</Badge>
+                        }
+                    </p>
+                </div>
+                <div>
+                    <p style="font-size:20px;position:relative ;cursor:pointer">
+                        🔔
+                        @if (Noticiations.Count > 0)
+                        {
+
+                            <Badge style="font-size:12px" Color="BadgeColor.Danger"
+                                   Position="Position.Relative"
+                                   Placement="BadgePlacement.TopLeft"
+                                   IndicatorType="BadgeIndicatorType.RoundedPill"
+                                   VisuallyHiddenText="unread messages">@Noticiations.Count</Badge>
+                        }
+                    </p>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+        <Offcanvas @ref="offcanvas">
+            <HeaderTemplate>
+                <div class="text-center">
+                    <p> ✉️ Notifications</p>
+                </div>
+            </HeaderTemplate>
+            <BodyTemplate>
+                <div class="flex">
+
+                    @foreach (var item in Noticiations)
+                    {
+                        <div class="row p-0 m-0 ">
+
+                            <img src="images/NexStore1.jpeg" class="rounded-circle col-2" alt="Cinque Terre">
+                            <div class=" row col-9">
+                                <span style="font-size:14px" class="col-10">@item.Message</span>
+
+                                <span style="font-size:8px">@item.Created</span>
+                               
+                            </div>
+                           
+                            </div>
+                        <hr>
+
+
+                    }
+                </div>
+                <div class="mt-3">
+                    <Button Color="ButtonColor.Primary" @onclick="OnHideOffcanvasClick">hide</Button>
+                </div>
+            </BodyTemplate>
+        </Offcanvas>
+
+
+        @code {
+            private Offcanvas offcanvas;
+
+            private async Task OnShowOffcanvasClick()
+            {
+                await offcanvas?.ShowAsync();
+            }
+
+            private async Task OnHideOffcanvasClick()
+            {
+                await offcanvas?.HideAsync();
+            }
+
+
+            private void RemoveFromList(int id)
+            {
+                Notification notificationToRemove = Noticiations.FirstOrDefault(x => x.Id == id);
+                Noticiations.Remove(notificationToRemove);
+                StateHasChanged();
+            }
+        }
         <article class="content px-4 ">
             @Body
         </article>
     </main>
 </div>
+  @code {
+    private List<Notification> Noticiations = new();
+    private string ConnectionStatusText = "Connecting..."; // Initial status text
+    private string ConnectionStatusColor = "orange"; // Initial status color
+
+
+    protected override void OnInitialized()
+    {
+
+        signalRservice.OnMessageReceived += HandleMessageReceived;
+        signalRservice.OnConnected += () => UpdateConnectionStatus("Connected", "green");
+        signalRservice.OnDisconnected += () => UpdateConnectionStatus("Connecting ...", "red");
+
+    }
+
+    private async void HandleMessageReceived(Notification notification)
+    {
+        await InvokeAsync(() =>
+        {
+            Debug.WriteLine("Handle Message fired 1");
+            Noticiations.Add(notification);
+            StateHasChanged();
+
+        });
+
+    }
+    private async void UpdateConnectionStatus(string statusText, string statusColor)
+    {
+        await InvokeAsync(() =>
+        {
+            ConnectionStatusText = statusText;
+            ConnectionStatusColor = statusColor;
+            StateHasChanged();
+        });
+
+    }
+  }

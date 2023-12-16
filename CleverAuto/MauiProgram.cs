@@ -49,6 +49,7 @@ namespace CleverAuto
 #endif
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddBlazorBootstrap(); // Add this line
+            builder.Services.AddSingleton<SignalRService>();
             builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Filename=AppDatabase.db3"));;
 
 #if DEBUG

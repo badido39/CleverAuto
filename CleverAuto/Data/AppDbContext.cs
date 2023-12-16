@@ -26,6 +26,7 @@ namespace CleverAuto.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
