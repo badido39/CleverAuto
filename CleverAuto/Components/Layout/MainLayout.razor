@@ -124,6 +124,7 @@
         signalRservice.OnConnected += () => UpdateConnectionStatus("Connected", "green");
         signalRservice.OnDisconnected += () => UpdateConnectionStatus("Connecting ...", "red");
 
+
     }
 
     private async void HandleMessageReceived(Notification notification)
